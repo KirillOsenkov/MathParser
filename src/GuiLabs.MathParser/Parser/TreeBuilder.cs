@@ -107,8 +107,7 @@ namespace GuiLabs.MathParser
             }
 
             Type type = argument.Type;
-            var property = type.GetProperty(propertyName,
-                BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
+            var property = type.GetRuntimeProperty(propertyName);
             if (property == null)
             {
                 Status.AddBindError(propertyName);
@@ -174,11 +173,6 @@ namespace GuiLabs.MathParser
                     return Expression.Power(left, right);
             }
             return null;
-        }
-
-        public void SetContext(object context)
-        {
-            Binder.Context = context;
         }
     }
 }

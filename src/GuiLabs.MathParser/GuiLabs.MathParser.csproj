@@ -19,7 +19,7 @@
     <Compile Include="ExpressionTreeCompiler.cs" />
     <Compile Include="ExpressionTreeInterpreter.cs" />
     <Compile Include="IExpressionTreeEvaluatorProvider.cs" />
-    <Compile Include="Parser\Compiler.cs" />
+    <Compile Include="Compiler.cs" />
     <Compile Include="Parser\Node.cs" />
     <Compile Include="Parser\NodeType.cs" />
     <Compile Include="Parser\Parser.cs" />
@@ -31,5 +31,5 @@
     <Compile Include="Parser\TreeBuilder.cs" />
   </ItemGroup>
   <Import Project="$(SrcRoot)\Common.targets" />
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
 </Project>

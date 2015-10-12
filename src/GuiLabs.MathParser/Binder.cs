@@ -7,27 +7,27 @@ namespace GuiLabs.MathParser
 {
     public class Binder
     {
+        private static List<MethodInfo> methods = new List<MethodInfo>();
+
+        private Dictionary<string, ParameterExpression> parameters = new Dictionary<string, ParameterExpression>();
+
         static Binder()
         {
             AddMethods(typeof(Math));
         }
 
-        static void AddMethods(Type type)
+        public static void AddMethods(Type type)
         {
-            foreach (var methodInfo in type.GetMethods())
+            foreach (var methodInfo in type.GetRuntimeMethods())
             {
                 methods.Add(methodInfo);
             }
         }
 
-        static List<MethodInfo> methods = new List<MethodInfo>();
-
         public void RegisterParameter(ParameterExpression parameter)
         {
             parameters.Add(parameter.Name, parameter);
         }
-
-        public object Context { get; set; }
 
         ParameterExpression ResolveParameter(string parameterName)
         {
@@ -36,23 +36,23 @@ namespace GuiLabs.MathParser
             {
                 return parameter;
             }
+
             return null;
         }
 
         Expression ResolveConstant(string identifier)
         {
-            if (identifier.Equals("pi", StringComparison.InvariantCultureIgnoreCase))
+            if (identifier.Equals("pi", StringComparison.OrdinalIgnoreCase))
             {
                 return Expression.Constant(Math.PI);
             }
-            else if (identifier.Equals("e", StringComparison.InvariantCultureIgnoreCase))
+            else if (identifier.Equals("e", StringComparison.OrdinalIgnoreCase))
             {
-                return Expression.Constant(System.Math.E);
+                return Expression.Constant(Math.E);
             }
+
             return null;
         }
-
-        Dictionary<string, ParameterExpression> parameters = new Dictionary<string, ParameterExpression>();
 
         public Expression Resolve(string identifier)
         {
@@ -61,7 +61,7 @@ namespace GuiLabs.MathParser
 
         public MethodInfo ResolveMethod(string functionName)
         {
-            foreach (var methodInfo in typeof(System.Math).GetMethods())
+            foreach (var methodInfo in typeof(Math).GetRuntimeMethods())
             {
                 var parameters = methodInfo.GetParameters();
                 if (methodInfo.Name.Equals(functionName, StringComparison.OrdinalIgnoreCase)

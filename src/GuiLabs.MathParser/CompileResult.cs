@@ -7,9 +7,10 @@ namespace GuiLabs.MathParser
 {
     public class CompileResult
     {
-        public Func<double, double> Function;
+        public Func<double, double> Function { get; set; }
         public Func<double> Expression { get; set; }
-        public readonly List<CompileError> Errors = new List<CompileError>();
+
+        public List<CompileError> Errors { get; } = new List<CompileError>();
 
         public bool IsSuccess
         {
@@ -17,24 +18,6 @@ namespace GuiLabs.MathParser
             {
                 return !Errors.Any() && (Expression != null || Function != null);
             }
-        }
-
-        public void AddError(string error)
-        {
-            Errors.Add(new CompileError()
-            {
-                Text = error
-            });
-        }
-
-        public void AddBindError(string objectName)
-        {
-            AddError(string.Format("Could not find object with name '{0}'", objectName));
-        }
-
-        public void AddMethodNotFoundError(string functionName)
-        {
-            AddError(string.Format("Could not find method '{0}'", functionName));
         }
 
         public override string ToString()
@@ -53,17 +36,35 @@ namespace GuiLabs.MathParser
             return sb.ToString();
         }
 
-        public void AddUnknownIdentifierError(string text)
+        internal void AddError(string error)
+        {
+            Errors.Add(new CompileError()
+            {
+                Text = error
+            });
+        }
+
+        internal void AddBindError(string objectName)
+        {
+            AddError(string.Format("Could not find object with name '{0}'", objectName));
+        }
+
+        internal void AddMethodNotFoundError(string functionName)
+        {
+            AddError(string.Format("Could not find method '{0}'", functionName));
+        }
+
+        internal void AddUnknownIdentifierError(string text)
         {
             AddError(string.Format("Unknown identifier: '{0}'", text));
         }
 
-        public void AddFigureIsNotAPointError(string longestPrefix)
+        internal void AddFigureIsNotAPointError(string longestPrefix)
         {
             AddError(string.Format("Figure '{0}' is not a point."));
         }
 
-        public void AddIncorrectNumberOfArgumentsError(System.Reflection.MethodInfo method, int actualNumberOfArguments)
+        internal void AddIncorrectNumberOfArgumentsError(System.Reflection.MethodInfo method, int actualNumberOfArguments)
         {
             AddError(string.Format("Function '{0}' expects {1} arguments, and it was passed {2}",
                 method.Name, method.GetParameters().Length, actualNumberOfArguments));

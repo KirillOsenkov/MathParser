@@ -21,6 +21,7 @@
     <VisualStudioReferenceAssemblyVersion>$(VisualStudioVersion).0.0</VisualStudioReferenceAssemblyVersion>
     <OutputType Condition="$(OutputType)==''">Library</OutputType>
     <TargetFrameworkVersion Condition="$(TargetFrameworkVersion)==''">v4.5</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Profile259</TargetFrameworkProfile>
     <SignAssembly Condition="'$(SignAssembly)' == ''">false</SignAssembly>
     <DefineConstants Condition="'$(SignAssembly)' == 'true'">$(DefineConstants);SIGN;</DefineConstants>
     <DelaySign>false</DelaySign>

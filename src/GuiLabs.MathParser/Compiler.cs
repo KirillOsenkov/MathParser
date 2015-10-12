@@ -5,11 +5,20 @@ namespace GuiLabs.MathParser
 {
     public class Compiler
     {
-        public IExpressionTreeEvaluatorProvider ExpressionTreeEvaluatorProvider { get; set; }
+        internal IExpressionTreeEvaluatorProvider evaluator;
 
-        public CompileResult CompileFunction(object context, string functionText)
+        public Compiler() : this(new ExpressionTreeCompiler())
         {
-            CompileResult result = new CompileResult();
+        }
+
+        public Compiler(IExpressionTreeEvaluatorProvider evaluator)
+        {
+            this.evaluator = evaluator;
+        }
+
+        public CompileResult CompileFunction(string functionText)
+        {
+            var result = new CompileResult();
             if (string.IsNullOrEmpty(functionText))
             {
                 return result;
@@ -21,24 +30,21 @@ namespace GuiLabs.MathParser
                 return result;
             }
 
-            ExpressionTreeBuilder builder = new ExpressionTreeBuilder();
-            builder.SetContext(context);
+            var builder = new ExpressionTreeBuilder();
             var expressionTree = builder.CreateFunction(ast, result);
             if (expressionTree == null || result.Errors.Any())
             {
                 return result;
             }
 
-            Func<double, double> function = ExpressionTreeEvaluatorProvider.InterpretFunction(expressionTree);
+            Func<double, double> function = evaluator.InterpretFunction(expressionTree);
             result.Function = function;
             return result;
         }
 
-        public CompileResult CompileExpression(
-            object context,
-            string expressionText)
+        public CompileResult CompileExpression(string expressionText)
         {
-            CompileResult result = new CompileResult();
+            var result = new CompileResult();
             if (string.IsNullOrEmpty(expressionText))
             {
                 return result;
@@ -50,15 +56,14 @@ namespace GuiLabs.MathParser
                 return result;
             }
 
-            ExpressionTreeBuilder builder = new ExpressionTreeBuilder();
-            builder.SetContext(context);
+            var builder = new ExpressionTreeBuilder();
             var expressionTree = builder.CreateExpression(ast, result);
             if (expressionTree == null || result.Errors.Any())
             {
                 return result;
             }
 
-            Func<double> function = ExpressionTreeEvaluatorProvider.InterpretExpression(expressionTree);
+            Func<double> function = evaluator.InterpretExpression(expressionTree);
             result.Expression = function;
             return result;
         }
