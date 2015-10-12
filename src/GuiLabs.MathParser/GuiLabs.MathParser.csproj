@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <SrcRoot>$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildProjectDirectory), Common.props))</SrcRoot>
+    <ProjectGuid>{2BE79907-19D6-41AE-B287-9AE8773E2A95}</ProjectGuid>
+    <AssemblyName>GuiLabs.MathParser</AssemblyName>
+  </PropertyGroup>
+  <Import Project="$(SrcRoot)\Common.props" />
+  <ItemGroup>
+    <Reference Include="System" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="GuiLabs.MathParser.nuspec" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Binder.cs" />
+    <Compile Include="CompileError.cs" />
+    <Compile Include="CompileResult.cs" />
+    <Compile Include="ExpressionTreeCompiler.cs" />
+    <Compile Include="ExpressionTreeInterpreter.cs" />
+    <Compile Include="IExpressionTreeEvaluatorProvider.cs" />
+    <Compile Include="Parser\Compiler.cs" />
+    <Compile Include="Parser\Node.cs" />
+    <Compile Include="Parser\NodeType.cs" />
+    <Compile Include="Parser\Parser.cs" />
+    <Compile Include="Parser\ParseResult.cs" />
+    <Compile Include="Parser\Scanner.cs" />
+    <Compile Include="Parser\ScanResult.cs" />
+    <Compile Include="Parser\Token.cs" />
+    <Compile Include="Parser\TokenType.cs" />
+    <Compile Include="Parser\TreeBuilder.cs" />
+  </ItemGroup>
+  <Import Project="$(SrcRoot)\Common.targets" />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
