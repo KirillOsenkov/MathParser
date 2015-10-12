@@ -19,6 +19,6 @@
     <tags>Math Parser Arithmetic Expression Evaluator Compiler</tags>
   </metadata>
   <files>
-    <file src="GuiLabs.MathParser.dll" target="lib\net45" />
+    <file src="GuiLabs.MathParser.dll" target="lib\dotnet" />
   </files>
 </package>
