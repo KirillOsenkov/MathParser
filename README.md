@@ -1,2 +1,4 @@
 # MathParser
-Parser for arithmetic expressions
+Parser and compiler/interpreter for arithmetic expressions
+
+## http://nuget.org/packages/guilabs.mathparser
