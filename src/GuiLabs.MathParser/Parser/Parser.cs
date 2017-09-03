@@ -235,6 +235,12 @@ namespace GuiLabs.MathParser
             var result = new Node(NodeType.FunctionCall, Current);
             AdvanceToken();
             AdvanceToken(TokenType.OpenParen);
+            if (CurrentTokenKind == TokenType.CloseParen)
+            {
+                AdvanceToken(TokenType.CloseParen);
+                return result;
+            }
+
             AddArgument(result, ParseExpression());
             while (CurrentTokenKind == TokenType.Comma)
             {

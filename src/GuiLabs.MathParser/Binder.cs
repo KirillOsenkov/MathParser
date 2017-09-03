@@ -14,10 +14,17 @@ namespace GuiLabs.MathParser
 
         public static Binder Default { get; } = CreateDefaultBinder();
 
+        public Binder(bool includeMathMethods = true)
+        {
+            if (includeMathMethods)
+            {
+                RegisterStaticMethods(typeof(Math));
+            }
+        }
+
         private static Binder CreateDefaultBinder()
         {
             var binder = new Binder();
-            binder.RegisterStaticMethods(typeof(Math));
             return binder;
         }
 
@@ -85,8 +92,8 @@ namespace GuiLabs.MathParser
                 return result;
             }
 
-            var method = ResolveMethod(identifier);
-            if (method != null && method.GetParameters().Length == 0)
+            var method = ResolveMethod(identifier, 0);
+            if (method != null)
             {
                 return Expression.Call(method);
             }
@@ -94,25 +101,20 @@ namespace GuiLabs.MathParser
             return null;
         }
 
-        public MethodInfo ResolveMethod(string functionName)
+        public MethodInfo ResolveMethod(string functionName, int parameterCount)
         {
-            foreach (var methodInfo in typeof(Math).GetRuntimeMethods())
+            foreach (var methodInfo in methods)
             {
                 var parameters = methodInfo.GetParameters();
+                if (parameters.Length != parameterCount)
+                {
+                    continue;
+                }
+
                 if (methodInfo.Name.Equals(functionName, StringComparison.OrdinalIgnoreCase)
                     && methodInfo.IsStatic
                     && parameters.All(p => p.ParameterType == typeof(double))
                     && methodInfo.ReturnType == typeof(double))
-                {
-                    return methodInfo;
-                }
-            }
-
-            foreach (var methodInfo in methods)
-            {
-                if (methodInfo.Name.Equals(functionName, StringComparison.OrdinalIgnoreCase) &&
-                    methodInfo.IsStatic &&
-                    methodInfo.ReturnType == typeof(double))
                 {
                     return methodInfo;
                 }

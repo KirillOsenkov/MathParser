@@ -9,13 +9,44 @@ namespace GuiLabs.MathParser.Tests
         [Fact]
         public void TestParser()
         {
-            Binder.Default.RegisterVariable("Random", () => new Random(1).NextDouble());
+            var binder = new Binder();
+            binder.RegisterVariable("Random", () => new Random(1).NextDouble());
             var compiler = new Compiler();
             var compilation = compiler.CompileExpression("Random");
             if (compilation.IsSuccess)
             {
                 var result = compilation.Expression();
             }
+        }
+
+        public class TestMethodClass
+        {
+            public static double Method() => 42;
+        }
+
+        [Fact]
+        public void TestMethods()
+        {
+            double number = Evaluate<TestMethodClass>("Method");
+            Assert.Equal(42, number);
+            number = Evaluate<TestMethodClass>("Method()");
+            Assert.Equal(42, number);
+        }
+
+        private static double Evaluate<T>(string text)
+        {
+            var binder = new Binder();
+            binder.RegisterStaticMethods<T>();
+            var compiler = new Compiler(binder: binder);
+            var result = compiler.CompileExpression(text);
+            var number = result.Expression();
+            return number;
+        }
+
+        [Fact]
+        public void ParseMethodWithNoArguments()
+        {
+            Assert.Equal("M()", Parser.Parse("M()").Root.ToString());
         }
 
         [Fact]
@@ -34,6 +65,7 @@ namespace GuiLabs.MathParser.Tests
             var tautologies = new[]
             {
                 "2 + 3",
+                "Method()",
                 "1",
                 "(3 * 4) + 2"
             };

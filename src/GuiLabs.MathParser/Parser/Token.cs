@@ -12,5 +12,10 @@
             Start = start;
             Kind = kind;
         }
+
+        public override string ToString()
+        {
+            return $"{Kind} (start at {Start}): {Text}";
+        }
     }
 }

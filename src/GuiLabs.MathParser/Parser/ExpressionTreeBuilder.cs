@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
@@ -126,27 +127,15 @@ namespace GuiLabs.MathParser
         Expression CreateCallExpression(Node root)
         {
             string functionName = root.Token.Text;
-            MethodInfo method = Binder.ResolveMethod(functionName);
+            MethodInfo method = Binder.ResolveMethod(functionName, root.Children.Count);
             if (method == null)
             {
                 Status.AddMethodNotFoundError(functionName);
                 return null;
             }
 
-            var arguments = root.Children;
-            if (arguments.Count == 1)
-            {
-                var argument = CreateExpressionCore(arguments[0]);
-                if (argument == null)
-                {
-                    return null;
-                }
-
-                return Expression.Call(method, argument);
-            }
-
-            Status.AddMethodNotFoundError(functionName);
-            return null;
+            var arguments = root.Children.Select(a => CreateExpressionCore(a));
+            return Expression.Call(method, arguments);
         }
 
         Expression CreateLiteralExpression(double arg)
