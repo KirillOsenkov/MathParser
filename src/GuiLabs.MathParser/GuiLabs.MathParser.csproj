@@ -1,35 +1,27 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <SrcRoot>$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildProjectDirectory), Common.props))</SrcRoot>
-    <ProjectGuid>{2BE79907-19D6-41AE-B287-9AE8773E2A95}</ProjectGuid>
     <AssemblyName>GuiLabs.MathParser</AssemblyName>
+    <TargetFramework>netstandard10</TargetFramework>
   </PropertyGroup>
-  <Import Project="$(SrcRoot)\Common.props" />
+
+  <PropertyGroup>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <PackageId>GuiLabs.MathParser</PackageId>
+    <Authors>Kirill Osenkov</Authors>
+    <Company>Microsoft</Company>
+    <Description>A parser and compiler for arithmetic expressions, with error reporting. Inspired by Roslyn.</Description>
+    <PackageLicenseUrl>https://github.com/KirillOsenkov/MathParser/blob/f75f8f06abd8f80bc042185d7b30cd8f3c1c428d/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/KirillOsenkov/MathParser</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/KirillOsenkov/MathParser</RepositoryUrl>
+    <PackageTags>Math Parser Arithmetic Expression Evaluator Compiler</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Nerdbank.GitVersioning" Version="2.0.37-beta" />
+  </ItemGroup>
+
   <ItemGroup>
     <Reference Include="System" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="GuiLabs.MathParser.nuspec" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Binder.cs" />
-    <Compile Include="CompileError.cs" />
-    <Compile Include="CompileResult.cs" />
-    <Compile Include="ExpressionTreeCompiler.cs" />
-    <Compile Include="ExpressionTreeInterpreter.cs" />
-    <Compile Include="IExpressionTreeEvaluatorProvider.cs" />
-    <Compile Include="Compiler.cs" />
-    <Compile Include="Parser\Node.cs" />
-    <Compile Include="Parser\NodeType.cs" />
-    <Compile Include="Parser\Parser.cs" />
-    <Compile Include="Parser\ParseResult.cs" />
-    <Compile Include="Parser\Scanner.cs" />
-    <Compile Include="Parser\ScanResult.cs" />
-    <Compile Include="Parser\Token.cs" />
-    <Compile Include="Parser\TokenType.cs" />
-    <Compile Include="Parser\TreeBuilder.cs" />
-  </ItemGroup>
-  <Import Project="$(SrcRoot)\Common.targets" />
-  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
+
 </Project>
