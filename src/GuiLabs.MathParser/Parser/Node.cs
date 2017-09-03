@@ -22,9 +22,16 @@ namespace GuiLabs.MathParser
             this.Children = new List<Node>();
         }
 
+        private static readonly char[] operators = { '+', '-', '*', '/', '^' };
         private string ToString(int childIndex)
         {
-            return "(" + Children[childIndex].ToString() + ")";
+            var childText = Children[childIndex].ToString();
+            if (childText.IndexOfAny(operators) > -1)
+            {
+                childText = "(" + childText + ")";
+            }
+
+            return childText;
         }
 
         public override string ToString()
