@@ -5,15 +5,13 @@ namespace GuiLabs.MathParser
 {
     public class Compiler
     {
-        internal IExpressionTreeEvaluatorProvider evaluator;
+        private readonly IExpressionTreeEvaluatorProvider evaluator;
+        private readonly Binder binder;
 
-        public Compiler() : this(new ExpressionTreeCompiler())
+        public Compiler(IExpressionTreeEvaluatorProvider evaluator = null, Binder binder = null)
         {
-        }
-
-        public Compiler(IExpressionTreeEvaluatorProvider evaluator)
-        {
-            this.evaluator = evaluator;
+            this.evaluator = evaluator ?? new ExpressionTreeCompiler();
+            this.binder = binder ?? Binder.Default;
         }
 
         public CompileResult CompileFunction(string functionText)
@@ -30,7 +28,7 @@ namespace GuiLabs.MathParser
                 return result;
             }
 
-            var builder = new ExpressionTreeBuilder();
+            var builder = new ExpressionTreeBuilder(binder);
             var expressionTree = builder.CreateFunction(ast, result);
             if (expressionTree == null || result.Errors.Any())
             {
@@ -56,7 +54,7 @@ namespace GuiLabs.MathParser
                 return result;
             }
 
-            var builder = new ExpressionTreeBuilder();
+            var builder = new ExpressionTreeBuilder(binder);
             var expressionTree = builder.CreateExpression(ast, result);
             if (expressionTree == null || result.Errors.Any())
             {

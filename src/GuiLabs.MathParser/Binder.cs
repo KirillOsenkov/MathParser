@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
@@ -7,16 +8,22 @@ namespace GuiLabs.MathParser
 {
     public class Binder
     {
-        private static List<MethodInfo> methods = new List<MethodInfo>();
-
+        private List<MethodInfo> methods = new List<MethodInfo>();
+        private Dictionary<string, Func<double>> variables = new Dictionary<string, Func<double>>();
         private Dictionary<string, ParameterExpression> parameters = new Dictionary<string, ParameterExpression>();
 
-        static Binder()
+        public static Binder Default { get; } = CreateDefaultBinder();
+
+        private static Binder CreateDefaultBinder()
         {
-            AddMethods(typeof(Math));
+            var binder = new Binder();
+            binder.RegisterStaticMethods(typeof(Math));
+            return binder;
         }
 
-        public static void AddMethods(Type type)
+        public void RegisterStaticMethods<T>() => RegisterStaticMethods(typeof(T));
+
+        public void RegisterStaticMethods(Type type)
         {
             foreach (var methodInfo in type.GetRuntimeMethods())
             {
@@ -26,13 +33,17 @@ namespace GuiLabs.MathParser
 
         public void RegisterParameter(ParameterExpression parameter)
         {
-            parameters.Add(parameter.Name, parameter);
+            parameters[parameter.Name] = parameter;
+        }
+
+        public void RegisterVariable(string variableName, Func<double> valueGetter)
+        {
+            variables[variableName] = valueGetter;
         }
 
         ParameterExpression ResolveParameter(string parameterName)
         {
-            ParameterExpression parameter;
-            if (parameters.TryGetValue(parameterName, out parameter))
+            if (parameters.TryGetValue(parameterName, out var parameter))
             {
                 return parameter;
             }
@@ -54,9 +65,33 @@ namespace GuiLabs.MathParser
             return null;
         }
 
+        Expression ResolveVariable(string identifier)
+        {
+            if (variables.TryGetValue(identifier, out var variable))
+            {
+                return Expression.Call(Expression.Constant(variable.Target), variable.GetMethodInfo());
+            }
+
+            return null;
+        }
+
         public Expression Resolve(string identifier)
         {
-            return ResolveConstant(identifier) ?? ResolveParameter(identifier);
+            var result = ResolveConstant(identifier)
+                ?? ResolveVariable(identifier)
+                ?? ResolveParameter(identifier);
+            if (result != null)
+            {
+                return result;
+            }
+
+            var method = ResolveMethod(identifier);
+            if (method != null && method.GetParameters().Length == 0)
+            {
+                return Expression.Call(method);
+            }
+
+            return null;
         }
 
         public MethodInfo ResolveMethod(string functionName)
@@ -65,8 +100,9 @@ namespace GuiLabs.MathParser
             {
                 var parameters = methodInfo.GetParameters();
                 if (methodInfo.Name.Equals(functionName, StringComparison.OrdinalIgnoreCase)
-                    && parameters.Length == 1
-                    && parameters[0].ParameterType == typeof(double))
+                    && methodInfo.IsStatic
+                    && parameters.All(p => p.ParameterType == typeof(double))
+                    && methodInfo.ReturnType == typeof(double))
                 {
                     return methodInfo;
                 }
@@ -74,7 +110,9 @@ namespace GuiLabs.MathParser
 
             foreach (var methodInfo in methods)
             {
-                if (methodInfo.Name.Equals(functionName, StringComparison.OrdinalIgnoreCase))
+                if (methodInfo.Name.Equals(functionName, StringComparison.OrdinalIgnoreCase) &&
+                    methodInfo.IsStatic &&
+                    methodInfo.ReturnType == typeof(double))
                 {
                     return methodInfo;
                 }

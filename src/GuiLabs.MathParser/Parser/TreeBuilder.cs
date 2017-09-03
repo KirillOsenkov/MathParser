@@ -8,7 +8,12 @@ namespace GuiLabs.MathParser
     {
         public ExpressionTreeBuilder()
         {
-            Binder = new Binder();
+            Binder = Binder.Default;
+        }
+
+        public ExpressionTreeBuilder(Binder binder)
+        {
+            Binder = binder;
         }
 
         public Binder Binder { get; set; }
