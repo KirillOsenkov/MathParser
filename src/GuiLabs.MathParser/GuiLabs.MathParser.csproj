@@ -1,7 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <AssemblyName>GuiLabs.MathParser</AssemblyName>
-    <TargetFramework>netstandard10</TargetFramework>
+    <TargetFramework>netstandard20</TargetFramework>
+    <DebugType>embedded</DebugType>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedFiles>true</EmbedUntrackedFiles>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -10,18 +13,15 @@
     <Authors>Kirill Osenkov</Authors>
     <Company>Microsoft</Company>
     <Description>A parser and compiler for arithmetic expressions, with error reporting. Inspired by Roslyn.</Description>
-    <PackageLicenseUrl>https://github.com/KirillOsenkov/MathParser/blob/f75f8f06abd8f80bc042185d7b30cd8f3c1c428d/LICENSE</PackageLicenseUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/KirillOsenkov/MathParser</PackageProjectUrl>
     <RepositoryUrl>https://github.com/KirillOsenkov/MathParser</RepositoryUrl>
     <PackageTags>Math Parser Arithmetic Expression Evaluator Compiler</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Nerdbank.GitVersioning" Version="2.0.37-beta" PrivateAssets="all" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="System" />
+    <PackageReference Include="Nerdbank.GitVersioning" Version="3.1.91" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" />
   </ItemGroup>
 
 </Project>
