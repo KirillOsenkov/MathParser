@@ -4,7 +4,7 @@
     <TargetFramework>netstandard20</TargetFramework>
     <DebugType>embedded</DebugType>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
-    <EmbedUntrackedFiles>true</EmbedUntrackedFiles>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
   </PropertyGroup>
 
   <PropertyGroup>
